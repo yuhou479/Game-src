@@ -64,6 +64,7 @@ public class GameEngine {
 		setRole(2, role2); // 设置玩家2代表的角色
 
 		play(); // 开始两人对战
+		input.close();
 	}
 
 	/**
@@ -205,6 +206,7 @@ public class GameEngine {
 		String answer = input.next();
 
 		/*********** 待补充的代码区域 *************/ // 产生一个1~6的数字,即掷的骰子数目
+		input.close();
 		return 2;
 		/*********** 待补充的代码区域 *************/
 	}
@@ -226,6 +228,7 @@ public class GameEngine {
 			return 99;
 		}
 		Scanner input = new Scanner(System.in);
+		input.close();
 		switch (map.map[position]) { // 根据地图中的关卡代号进行判断
 		case 0: // 走到普通格
 			/*********** 待补充的代码区域 *************/
