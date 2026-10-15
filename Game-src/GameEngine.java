@@ -1,101 +1,112 @@
 import java.util.*;
 
 public class GameEngine {
-	GameMap map; // µØÍ¼
-	int playerPos1; // ¶ÔÕ½ÖĞÍæ¼Ò1µÄµ±Ç°Î»ÖÃ
-	int playerPos2; // ¶ÔÕ½ÖĞÍæ¼Ò2µÄµ±Ç°Î»ÖÃ
-	String[] goAndStop = new String[2]; // ×ß»òÍ£±êÊ¶ÉèÖÃ
-	String[] playerName = new String[2]; // ¶ÔÕ½½ÇÉ«
+	GameMap map; // åœ°å›¾
+	int playerPos1; // å¯¹æˆ˜ä¸­ç©å®¶1çš„å½“å‰ä½ç½®
+	int playerPos2; // å¯¹æˆ˜ä¸­ç©å®¶2çš„å½“å‰ä½ç½®
+	String[] goAndStop = new String[2]; // èµ°æˆ–åœæ ‡è¯†è®¾ç½®
+	String[] playerName = new String[2]; // å¯¹æˆ˜è§’è‰²
 
 	/**
-	 * ³õÊ¼»¯ÓÎÏ·µÄÒ»¾Ö
+	 * åˆå§‹åŒ–æ¸¸æˆçš„ä¸€å±€
 	 */
 	public void init() {
 		map = new GameMap();
-		map.createMap(); // Éú³ÉµØÍ¼
-		playerPos1 = 0; // ÉèÖÃÍæ¼Ò1ÆğÊ¼Î»ÖÃ
-		playerPos2 = 0; // ÉèÖÃÍæ¼Ò2ÆğÊ¼Î»ÖÃ
-		goAndStop[0] = "on"; // ¼ÇÂ¼Íæ¼Ò1ÏÂÒ»´Î×ß»òÍ£
-		goAndStop[1] = "on"; // ÉèÖÃÍæ¼Ò2ÏÂÒ»´Î×ß»òÍ£
+		map.createMap(); // ç”Ÿæˆåœ°å›¾
+		playerPos1 = 0; // è®¾ç½®ç©å®¶1èµ·å§‹ä½ç½®
+		playerPos2 = 0; // è®¾ç½®ç©å®¶2èµ·å§‹ä½ç½®
+		goAndStop[0] = "on"; // è®°å½•ç©å®¶1ä¸‹ä¸€æ¬¡èµ°æˆ–åœ
+		goAndStop[1] = "on"; // è®¾ç½®ç©å®¶2ä¸‹ä¸€æ¬¡èµ°æˆ–åœ
+	}
+
+	private int getInputOfChosingPlayer(Scanner input) {
+		String temp = input.next().trim();
+		if (temp.equals("1. å…³ç¾½") || temp.equals("å…³ç¾½") || temp.equals("1.å…³ç¾½")) {
+			temp = "1";
+		} else if (temp.equals("2. å¼ é£") || temp.equals("å¼ é£") || temp.equals("2.å¼ é£")) {
+			temp = "2";
+		} else if (temp.equals("3. å•å¸ƒ") || temp.equals("å•å¸ƒ") || temp.equals("3.å•å¸ƒ")) {
+			temp = "3";
+		} else if (temp.equals("4. èµµäº‘") || temp.equals("èµµäº‘") || temp.equals("4.èµµäº‘")) {
+			temp = "4";
+		}
+		int ans = temp.charAt(0) - '0';
+		if (temp.length() > 1 || (ans != 1 && ans != 2 && ans != 3 && ans != 4)) {
+			System.out.println();
+			System.out.print("è¾“å…¥ä¸åˆæ³•ï¼Œè¯·é‡æ–°è¾“å…¥ï¼š");
+			ans = getInputOfChosingPlayer(input);
+		}
+		return ans;
 	}
 
 	/**
-	 * ¿ªÊ¼ÓÎÏ·
+	 * å¼€å§‹æ¸¸æˆ
 	 */
 	public void start() {
-		// ³õÊ¼»¯
+		// åˆå§‹åŒ–
 		init();
 		System.out.println("**************************************************************");
 		System.out.println("*                                                            *");
 		System.out.println("*                                                            *");
-		System.out.println("*                         ·ÉĞĞÆåÓÎÏ·                         *");
+		System.out.println("*                         é£è¡Œæ£‹æ¸¸æˆ                         *");
 		System.out.println("*                                                            *");
 		System.out.println("*                                                            *");
 		System.out.println("**************************************************************\n");
 
-		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~Á½  ÈË  ¶Ô  Õ½~~~~~~~~~~~~~~~~~~~~~~~~\n");
-		System.out.println("ÇëÑ¡Ôñ½ÇÉ«: 1. ¹ØÓğ  2. ÕÅ·É  3. ÂÀ²¼  4. ÕÔÔÆ");
-		Scanner input = new Scanner(System.in);
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~ä¸¤  äºº  å¯¹  æˆ˜~~~~~~~~~~~~~~~~~~~~~~~~\n");
+		System.out.println("è¯·é€‰æ‹©è§’è‰²: 1. å…³ç¾½  2. å¼ é£  3. å•å¸ƒ  4. èµµäº‘");
+		Scanner input = new Scanner(System.in, "GBK");
 
-		/*********** ´ı²¹³äµÄ´úÂëÇøÓò *************/
-		// Í¨¹ı¼üÅÌÊäÈë½ÓÊÕÓÃ»§Ñ¡ÔñµÄ½ÇÉ«£¬×¢Òâ£¬²»ÔÊĞí½ÇÉ«ÖØ¸´
-		System.out.print("ÇëÍæ¼Ò1Ñ¡Ôñ½ÇÉ«:  ");
-		int role1 = input.nextInt();
-		while (role1 <= 0 || role1 > 4) {
+		/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ *************/
+		// é€šè¿‡é”®ç›˜è¾“å…¥æ¥æ”¶ç”¨æˆ·é€‰æ‹©çš„è§’è‰²ï¼Œæ³¨æ„ï¼Œä¸å…è®¸è§’è‰²é‡å¤
+		System.out.print("è¯·ç©å®¶1é€‰æ‹©è§’è‰²:  ");
+		int role1 = getInputOfChosingPlayer(input);
+		System.out.print("è¯·ç©å®¶2é€‰æ‹©è§’è‰²:  ");
+		int role2 = getInputOfChosingPlayer(input);
+		while (role2 == role1) {
 			System.out.println();
-			System.out.println("ÊäÈë²»ºÏ·¨£¬ÇëÖØĞÂÊäÈë");
-			role1 = input.nextInt();
+			System.out.print("è§’è‰²" + role1 + "å·²è¢«é€‰æ‹©ï¼Œè¯·é‡æ–°é€‰æ‹©ï¼š");
+			role2 = getInputOfChosingPlayer(input);
 		}
-		System.out.print("ÇëÍæ¼Ò2Ñ¡Ôñ½ÇÉ«:  ");
-		int role2 = input.nextInt();
-		while (role2 <= 0 || role2 > 4) {
-			System.out.println();
-			System.out.println("ÊäÈë²»ºÏ·¨£¬ÇëÖØĞÂÊäÈë");
-			role2 = input.nextInt();
-		}
-		while(role2 == role1){
-			System.out.println();
-			System.out.println("½ÇÉ«"+role1+"ÒÑ±»Ñ¡Ôñ£¬ÇëÖØĞÂÑ¡Ôñ£º");
-			role2 = input.nextInt();
-		}
-		/*********** ´ı²¹³äµÄ´úÂëÇøÓò *************/
+		/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ *************/
 
-		setRole(1, role1); // ÉèÖÃÍæ¼Ò1´ú±íµÄ½ÇÉ«
-		setRole(2, role2); // ÉèÖÃÍæ¼Ò2´ú±íµÄ½ÇÉ«
+		setRole(1, role1); // è®¾ç½®ç©å®¶1ä»£è¡¨çš„è§’è‰²
+		setRole(2, role2); // è®¾ç½®ç©å®¶2ä»£è¡¨çš„è§’è‰²
 
-		play(); // ¿ªÊ¼Á½ÈË¶ÔÕ½
+		play(); // å¼€å§‹ä¸¤äººå¯¹æˆ˜
 		input.close();
 	}
 
 	/**
-	 * ÉèÖÃ¶ÔÕ½½ÇÉ«
+	 * è®¾ç½®å¯¹æˆ˜è§’è‰²
 	 * 
 	 * @param no
-	 *            Íæ¼Ò´ÎĞò 1£ºÍæ¼Ò1 2£ºÍæ¼Ò2
+	 *             ç©å®¶æ¬¡åº 1ï¼šç©å®¶1 2ï¼šç©å®¶2
 	 * @param role
-	 *            ½ÇÉ«´úºÅ
+	 *             è§’è‰²ä»£å·
 	 */
 	public void setRole(int no, int role) {
 		switch (role) {
-		case 1:
-			playerName[no - 1] = "¹ØÓğ";
-			break;
-		case 2:
-			playerName[no - 1] = "ÕÅ·É";
-			break;
-		case 3:
-			playerName[no - 1] = "ÂÀ²¼";
-			break;
-		case 4:
-			playerName[no - 1] = "ÕÔÔÆ";
-			break;
-		default:
-			break;
+			case 1:
+				playerName[no - 1] = "å…³ç¾½";
+				break;
+			case 2:
+				playerName[no - 1] = "å¼ é£";
+				break;
+			case 3:
+				playerName[no - 1] = "å•å¸ƒ";
+				break;
+			case 4:
+				playerName[no - 1] = "èµµäº‘";
+				break;
+			default:
+
+				break;
 		}
 	}
 
 	/**
-	 * Á½ÈË¶ÔÕ½Íæ·¨
+	 * ä¸¤äººå¯¹æˆ˜ç©æ³•
 	 */
 	public void play() {
 		System.out.println("\n");
@@ -104,87 +115,84 @@ public class GameEngine {
 		System.out.print("*                        Game Start                          *\n");
 		System.out.print("**************************************************************\n");
 
-		// ÏÔÊ¾¶ÔÕ½Ë«·½Ê¿±øÑùÊ½
-		System.out.println("^_^" + playerName[0] + "µÄÊ¿±ø£º£Á");
-		System.out.println("^_^" + playerName[1] + "µÄÊ¿±ø£º£Â\n");
+		// æ˜¾ç¤ºå¯¹æˆ˜åŒæ–¹å£«å…µæ ·å¼
+		System.out.println("^_^" + playerName[0] + "çš„å£«å…µï¼šï¼¡");
+		System.out.println("^_^" + playerName[1] + "çš„å£«å…µï¼šï¼¢\n");
 
-		// ÏÔÊ¾¶ÔÕ½µØÍ¼
-		System.out.println("Í¼ÀıËµÃ÷£º¡ğ Æğµã; ¨ˆ ÖÕµã; ¡ö ÔİÍ£; ¡è ĞÒÔËÂÖÅÌ; ¡ï µØÀ×; ¡ş Ê±¿ÕËíµÀ; £­ ÆÕÍ¨; Êı×Ö µ±Ç°Î»ÖÃĞòºÅ\nµØÍ¼ÈçÏÂ£º");
-
-		System.out.println("Æğµã¡ú");
+		// æ˜¾ç¤ºå¯¹æˆ˜åœ°å›¾
+		System.out.println("å›¾ä¾‹è¯´æ˜ï¼šâ—‹ èµ·ç‚¹; â–“ ç»ˆç‚¹; â–  æš‚åœ; Â¤ å¹¸è¿è½®ç›˜; â˜… åœ°é›·; ã€“ æ—¶ç©ºéš§é“; ï¼ æ™®é€š; æ•°å­— å½“å‰ä½ç½®åºå·\nåœ°å›¾å¦‚ä¸‹ï¼š");
 		map.showMap(playerPos1, playerPos2);
 		System.out.println("\n");
 		for (int j = 28; j > 0; j--) {
-			System.out.print("¡¡");
+			System.out.print("  ");
 		}
-		System.out.println("¡úÖÕµã");
 
-		// ÓÎÏ·¿ªÊ¼
-		int step; // ´æ´¢÷»×ÓÊıÄ¿
-		while (playerPos1 < 99 && playerPos2 < 99) { // ÓĞÈÎºÎÒ»·½×ßµ½ÖÕµã£¬Ìø³öÑ­»·
+		// æ¸¸æˆå¼€å§‹
+		int step; // å­˜å‚¨éª°å­æ•°ç›®
+		while (playerPos1 < 99 && playerPos2 < 99) { // æœ‰ä»»ä½•ä¸€æ–¹èµ°åˆ°ç»ˆç‚¹ï¼Œè·³å‡ºå¾ªç¯
 
-			// ÂÖÁ÷ÖÀ÷»×Ó
+			// è½®æµæ·éª°å­
 			if (goAndStop[0].equals("on")) {
-				// Íæ¼Ò1ÖÀ÷»×Ó
-				step = throwShifter(1); // ÖÀ÷»×Ó
-				System.out.println("-----------------"); // ÏÔÊ¾½á¹ûĞÅÏ¢
-				System.out.println(playerName[0] + "¸Õ²ÅµÃµ½µÄ÷»×ÓÊı£º " + step + "\n");
-				playerPos1 = getCurPos(1, playerPos1, step); // ¼ÆËãÕâÒ»´ÎÒÆ¶¯ºóµÄµ±Ç°Î»ÖÃ
-				System.out.println(playerName[0] + "(A)µ±Ç°Î»ÖÃ£º  " + playerPos1);
-				System.out.println(playerName[1] + "(B)µ±Ç°Î»ÖÃ£º" + playerPos2);
+				// ç©å®¶1æ·éª°å­
+				step = throwShifter(1); // æ·éª°å­
+				System.out.println("-----------------"); // æ˜¾ç¤ºç»“æœä¿¡æ¯
+				System.out.println(playerName[0] + "åˆšæ‰å¾—åˆ°çš„éª°å­æ•°ï¼š " + step + "\n");
+				playerPos1 = getCurPos(1, playerPos1, step); // è®¡ç®—è¿™ä¸€æ¬¡ç§»åŠ¨åçš„å½“å‰ä½ç½®
+				System.out.println(playerName[0] + "(A)å½“å‰ä½ç½®ï¼š  " + playerPos1);
+				System.out.println(playerName[1] + "(B)å½“å‰ä½ç½®ï¼š" + playerPos2);
 				System.out.println("-----------------");
 
-				// ÏÔÊ¾¶ÔÕ½µØÍ¼
-				System.out.println("Í¼ÀıËµÃ÷£º¡ğ Æğµã; ¨ˆ ÖÕµã; ¡ö ÔİÍ£; ¡è ĞÒÔËÂÖÅÌ; ¡ï µØÀ×; ¡ş Ê±¿ÕËíµÀ; £­ ÆÕÍ¨; Êı×Ö µ±Ç°Î»ÖÃĞòºÅ\nµØÍ¼ÈçÏÂ£º");
+				// æ˜¾ç¤ºå¯¹æˆ˜åœ°å›¾
+				System.out.println("å›¾ä¾‹è¯´æ˜ï¼šâ—‹ èµ·ç‚¹; â–“ ç»ˆç‚¹; â–  æš‚åœ; Â¤ å¹¸è¿è½®ç›˜; â˜… åœ°é›·; ã€“ æ—¶ç©ºéš§é“; ï¼ æ™®é€š; æ•°å­— å½“å‰ä½ç½®åºå·\nåœ°å›¾å¦‚ä¸‹ï¼š");
 
-				System.out.println("Æğµã¡ú");
+				System.out.println("èµ·ç‚¹â†’");
 
-				map.showMap(playerPos1, playerPos2); // ÏÔÊ¾µ±Ç°µØÍ¼
+				map.showMap(playerPos1, playerPos2); // æ˜¾ç¤ºå½“å‰åœ°å›¾
 
 				System.out.println("\n");
 				for (int j = 28; j > 0; j--) {
-					System.out.print("¡¡");
+					System.out.print("ã€€");
 				}
-				System.out.println("¡úÖÕµã");
+				System.out.println("â†’ç»ˆç‚¹");
 
 			} else {
-				System.out.println("\n" + playerName[0] + "Í£ÖÀÒ»´Î£¡\n"); // ÏÔÊ¾´Ë´ÎÔİÍ£ĞÅÏ¢
-				goAndStop[0] = "on"; // ÉèÖÃÏÂ´Î¿ÉÖÀ×´Ì¬
+				System.out.println("\n" + playerName[0] + "åœæ·ä¸€æ¬¡ï¼\n"); // æ˜¾ç¤ºæ­¤æ¬¡æš‚åœä¿¡æ¯
+				goAndStop[0] = "on"; // è®¾ç½®ä¸‹æ¬¡å¯æ·çŠ¶æ€
 			}
 
 			// System.out.println("\n");
 
 			if (goAndStop[1].equals("on")) {
-				// Íæ¼Ò2ÖÀ÷»×Ó
-				step = throwShifter(2); // ÖÀ÷»×Ó
-				System.out.println("-----------------"); // ÏÔÊ¾½á¹ûĞÅÏ¢
-				System.out.println(playerName[1] + "¸Õ²ÅµÃµ½µÄ÷»×ÓÊı£º " + step + "\n");
-				playerPos2 = getCurPos(2, playerPos2, step); // ¼ÆËãÕâÒ»´ÎÒÆ¶¯ºóµÄµ±Ç°Î»ÖÃ
-				System.out.println(playerName[0] + "(A)µ±Ç°Î»ÖÃ£º  " + playerPos1);
-				System.out.println(playerName[1] + "(B)µ±Ç°Î»ÖÃ£º" + playerPos2);
+				// ç©å®¶2æ·éª°å­
+				step = throwShifter(2); // æ·éª°å­
+				System.out.println("-----------------"); // æ˜¾ç¤ºç»“æœä¿¡æ¯
+				System.out.println(playerName[1] + "åˆšæ‰å¾—åˆ°çš„éª°å­æ•°ï¼š " + step + "\n");
+				playerPos2 = getCurPos(2, playerPos2, step); // è®¡ç®—è¿™ä¸€æ¬¡ç§»åŠ¨åçš„å½“å‰ä½ç½®
+				System.out.println(playerName[0] + "(A)å½“å‰ä½ç½®ï¼š  " + playerPos1);
+				System.out.println(playerName[1] + "(B)å½“å‰ä½ç½®ï¼š" + playerPos2);
 				System.out.println("-----------------");
 
-				// ÏÔÊ¾¶ÔÕ½µØÍ¼
-				System.out.println("Í¼ÀıËµÃ÷£º¡ğ Æğµã; ¨ˆ ÖÕµã; ¡ö ÔİÍ£; ¡è ĞÒÔËÂÖÅÌ; ¡ï µØÀ×; ¡ş Ê±¿ÕËíµÀ; £­ ÆÕÍ¨; Êı×Ö µ±Ç°Î»ÖÃĞòºÅ\nµØÍ¼ÈçÏÂ£º");
+				// æ˜¾ç¤ºå¯¹æˆ˜åœ°å›¾
+				System.out.println("å›¾ä¾‹è¯´æ˜ï¼šâ—‹ èµ·ç‚¹; â–“ ç»ˆç‚¹; â–  æš‚åœ; Â¤ å¹¸è¿è½®ç›˜; â˜… åœ°é›·; ã€“ æ—¶ç©ºéš§é“; ï¼ æ™®é€š; æ•°å­— å½“å‰ä½ç½®åºå·\nåœ°å›¾å¦‚ä¸‹ï¼š");
 
-				System.out.println("Æğµã¡ú");
+				System.out.println("â—‹â†’");
 
-				map.showMap(playerPos1, playerPos2); // ÏÔÊ¾µ±Ç°µØÍ¼
+				map.showMap(playerPos1, playerPos2); // æ˜¾ç¤ºå½“å‰åœ°å›¾
 
 				System.out.println("\n");
 				for (int j = 28; j > 0; j--) {
-					System.out.print("¡¡");
+					System.out.print("ã€€");
 				}
-				System.out.println("¡úÖÕµã");
+				System.out.println("â†’â–“");
 			} else {
-				System.out.println("\n" + playerName[1] + "Í£ÖÀÒ»´Î£¡\n"); // ÏÔÊ¾´Ë´ÎÔİÍ£ĞÅÏ¢
-				goAndStop[1] = "on"; // ÉèÖÃÏÂ´Î¿ÉÖÀ×´Ì¬
+				System.out.println("\n" + playerName[1] + "åœæ·ä¸€æ¬¡ï¼\n"); // æ˜¾ç¤ºæ­¤æ¬¡æš‚åœä¿¡æ¯
+				goAndStop[1] = "on"; // è®¾ç½®ä¸‹æ¬¡å¯æ·çŠ¶æ€
 			}
 
 			// System.out.println("\n");
 		}
 
-		// ÓÎÏ·½áÊø
+		// æ¸¸æˆç»“æŸ
 		System.out.println("\n\n\n\n");
 		System.out.print("****************************************************\n");
 		System.out.print("                      Game  Over                    \n");
@@ -193,66 +201,66 @@ public class GameEngine {
 	}
 
 	/**
-	 * ÖÀ÷»×Ó
+	 * æ·éª°å­
 	 * 
 	 * @param no
-	 *            Íæ¼Ò´ÎĞò
-	 * @return step ÖÀ³öµÄ÷»×ÓÊıÄ¿
+	 *           ç©å®¶æ¬¡åº
+	 * @return step æ·å‡ºçš„éª°å­æ•°ç›®
 	 */
 	public int throwShifter(int no) {
 		int step = 0;
-		System.out.print(playerName[no - 1] + ", ÇëÄú°´ÈÎÒâ×ÖÄ¸¼üºó»Ø³µÆô¶¯ÖÀ÷»×Ó£º ");
+		System.out.print(playerName[no - 1] + ", è¯·æ‚¨æŒ‰ä»»æ„å­—æ¯é”®åå›è½¦å¯åŠ¨æ·éª°å­ï¼š ");
 		Scanner input = new Scanner(System.in);
 		String answer = input.next();
 
-		/*********** ´ı²¹³äµÄ´úÂëÇøÓò *************/ // ²úÉúÒ»¸ö1~6µÄÊı×Ö,¼´ÖÀµÄ÷»×ÓÊıÄ¿
+		/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ *************/ // äº§ç”Ÿä¸€ä¸ª1~6çš„æ•°å­—,å³æ·çš„éª°å­æ•°ç›®
 		input.close();
 		return 2;
-		/*********** ´ı²¹³äµÄ´úÂëÇøÓò *************/
+		/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ *************/
 	}
 
 	/**
-	 * ¼ÆËãÍæ¼Ò´Ë´ÎÒÆ¶¯ºóµÄµ±Ç°Î»ÖÃ
+	 * è®¡ç®—ç©å®¶æ­¤æ¬¡ç§»åŠ¨åçš„å½“å‰ä½ç½®
 	 * 
 	 * @param no
-	 *            Íæ¼Ò´ÎĞò
+	 *                 ç©å®¶æ¬¡åº
 	 * @param position
-	 *            ÒÆ¶¯Ç°Î»ÖÃ
+	 *                 ç§»åŠ¨å‰ä½ç½®
 	 * @param step
-	 *            ÖÀµÄ÷»×ÓÊıÄ¿
-	 * @return position ÒÆ¶¯ºóµÄÎ»ÖÃ
+	 *                 æ·çš„éª°å­æ•°ç›®
+	 * @return position ç§»åŠ¨åçš„ä½ç½®
 	 */
 	public int getCurPos(int no, int position, int step) {
-		position = position + step; // µÚÒ»´ÎÒÆ¶¯ºóµÄÎ»ÖÃ
+		position = position + step; // ç¬¬ä¸€æ¬¡ç§»åŠ¨åçš„ä½ç½®
 		if (position >= 99) {
 			return 99;
 		}
 		Scanner input = new Scanner(System.in);
 		input.close();
-		switch (map.map[position]) { // ¸ù¾İµØÍ¼ÖĞµÄ¹Ø¿¨´úºÅ½øĞĞÅĞ¶Ï
-		case 0: // ×ßµ½ÆÕÍ¨¸ñ
-			/*********** ´ı²¹³äµÄ´úÂëÇøÓò *************/
-			;
-			/*********** ´ı²¹³äµÄ´úÂëÇøÓò *************/
-		case 1: // ĞÒÔËÂÖÅÌ
-			/*********** ´ı²¹³äµÄ´úÂëÇøÓò *************/
-			;
-			/*********** ´ı²¹³äµÄ´úÂëÇøÓò *************/
-		case 2: // ²Èµ½µØÀ×
-			/*********** ´ı²¹³äµÄ´úÂëÇøÓò *************/
-			;
-			/*********** ´ı²¹³äµÄ´úÂëÇøÓò *************/
-		case 3: // ÏÂÒ»´ÎÔİÍ£Ò»´Î
-			/*********** ´ı²¹³äµÄ´úÂëÇøÓò *************/
-			;
-			/*********** ´ı²¹³äµÄ´úÂëÇøÓò *************/
-		case 4: // Ê±¿ÕËíµÀ
-			/*********** ´ı²¹³äµÄ´úÂëÇøÓò *************/
-			;
-			/*********** ´ı²¹³äµÄ´úÂëÇøÓò *************/
+		switch (map.map[position]) { // æ ¹æ®åœ°å›¾ä¸­çš„å…³å¡ä»£å·è¿›è¡Œåˆ¤æ–­
+			case 0: // èµ°åˆ°æ™®é€šæ ¼
+				/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ *************/
+				;
+				/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ *************/
+			case 1: // å¹¸è¿è½®ç›˜
+				/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ *************/
+				;
+				/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ *************/
+			case 2: // è¸©åˆ°åœ°é›·
+				/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ *************/
+				;
+				/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ *************/
+			case 3: // ä¸‹ä¸€æ¬¡æš‚åœä¸€æ¬¡
+				/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ *************/
+				;
+				/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ *************/
+			case 4: // æ—¶ç©ºéš§é“
+				/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ *************/
+				;
+				/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ *************/
 		}
 
-		// ·µ»Ø´Ë´ÎÖÀ÷»×ÓºóÍæ¼ÒµÄÎ»ÖÃ×ø±ê
+		// è¿”å›æ­¤æ¬¡æ·éª°å­åç©å®¶çš„ä½ç½®åæ ‡
 		if (position < 0) {
 			return 0;
 		} else if (position > 99) {
@@ -263,13 +271,13 @@ public class GameEngine {
 	}
 
 	/**
-	 * ÏÔÊ¾¶ÔÕ½½á¹û
+	 * æ˜¾ç¤ºå¯¹æˆ˜ç»“æœ
 	 */
 	public void judge() {
 		if (playerPos1 > playerPos2) {
-			System.out.println("\n¹§Ï²" + playerName[0] + "½«¾ü! Äú»ñÊ¤ÁË£¡");
+			System.out.println("\næ­å–œ" + playerName[0] + "å°†å†›! æ‚¨è·èƒœäº†ï¼");
 		} else {
-			System.out.println("\n¹§Ï²" + playerName[1] + "½«¾ü! Äú»ñÊ¤ÁË£¡");
+			System.out.println("\næ­å–œ" + playerName[1] + "å°†å†›! æ‚¨è·èƒœäº†ï¼");
 		}
 	}
 }

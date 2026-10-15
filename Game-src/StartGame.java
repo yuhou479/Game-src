@@ -1,11 +1,11 @@
 public class StartGame {
 
 	/**
-	 * Æô¶¯ÓÎÏ·
+	 * å¯åŠ¨æ¸¸æˆ
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		GameEngine game = new GameEngine();   //´´½¨ÓÎÏ·Àà
-  	    game.start();             //¿ªÊ¼ÓÎÏ·
+		GameEngine game = new GameEngine();   //åˆ›å»ºæ¸¸æˆç±»
+  	    game.start();             //å¼€å§‹æ¸¸æˆ
 	}
 }

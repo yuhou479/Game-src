@@ -1,129 +1,178 @@
 public class GameMap {
-	int[] map = new int[100];   //¶ÔÕ½µØÍ¼,×¢Òâ£¬ÒÔÏÂÊı×éÖĞµÄindex´Ó0¿ªÊ¼£¬¹ÊµÚ1¸öµØÀ×Êµ¼Ê³öÏÖÔÚµØÍ¼ÉÏµÄµÚ5¸öÎ»ÖÃ
-	int[] luckyTurn = {6, 23, 39, 54, 69, 83}; //ĞÒÔËÂÖÅÌ 
-	int[] landMine = {4, 13, 17, 33, 38, 49, 64, 79, 94};   //µØÀ×Î»ÖÃ£¬µÚ1¸öµØÀ×Êµ¼Ê³öÏÖÔÚµØÍ¼ÉÏµÄµÚ6¸öÎ»ÖÃ
-	int[] pause = {9, 27, 59, 93};         //ÔİÍ£
-	int[] timeTunnel = {19, 24, 44, 63, 72, 87, 89};   //Ê±¿ÕËíµÀ
+	int[] map = new int[100]; // å¯¹æˆ˜åœ°å›¾,æ³¨æ„ï¼Œä»¥ä¸‹æ•°ç»„ä¸­çš„indexä»0å¼€å§‹ï¼Œæ•…ç¬¬1ä¸ªåœ°é›·å®é™…å‡ºç°åœ¨åœ°å›¾ä¸Šçš„ç¬¬5ä¸ªä½ç½®
+	int[] luckyTurn = { 6, 23, 39, 54, 69, 83 }; // å¹¸è¿è½®ç›˜
+	int[] landMine = { 4, 13, 17, 33, 38, 49, 64, 79, 94 }; // åœ°é›·ä½ç½®ï¼Œç¬¬1ä¸ªåœ°é›·å®é™…å‡ºç°åœ¨åœ°å›¾ä¸Šçš„ç¬¬5ä¸ªä½ç½®
+	int[] pause = { 9, 27, 59, 93 }; // æš‚åœ
+	int[] timeTunnel = { 19, 24, 44, 63, 72, 87, 89 }; // æ—¶ç©ºéš§é“
 
- 	
-	 /**
-	   * Éú³ÉµØÍ¼: 
-	   * ¹Ø¿¨´úºÅÎª£º1£ºĞÒÔËÂÖÅÌ 2£ºµØÀ×  3: ÔİÍ£ 4£ºÊ±¿ÕËíµÀ 0£ºÆÕÍ¨
-	   */
-    public void createMap(){
-  	    int i = 0; 
-  	    
-  	    //ÔÚ¶ÔÕ½µØÍ¼ÉÏÉèÖÃĞÒÔËÂÖÅÌ
-  	    for(i = 0; i < luckyTurn.length; i++){
-  	    	map[luckyTurn[i]] = 1; 
-  	    }
-  	    
-  	    //ÔÚ¶ÔÕ½µØÍ¼ÉÏÉèÖÃµØÀ×
-  	    for(i = 0; i < landMine.length; i++){
-	    	map[landMine[i]] = 2; 
-	    }
-  	    
-  	    //ÔÚ¶ÔÕ½µØÍ¼ÉÏÉèÖÃÔİÍ£
-  	    for(i = 0; i < pause.length; i++){
-	    	map[pause[i]] = 3; 
-	    }
-  	    
-  	    //ÔÚ¶ÔÕ½µØÍ¼ÉÏÉèÖÃÊ±¿ÕËíµÀ
-  	    for(i = 0; i < timeTunnel.length; i++){
-	    	map[timeTunnel[i]] = 4; 
-	    }
-    }
-    
-    /**
-     * ÏÔÊ¾µØÍ¼¹Ø¿¨¶ÔÓ¦µÄÍ¼ĞÎ
-     * @param i µØÍ¼µ±Ç°Î»ÖÃµÄ¹Ø¿¨´úºÅ,¼´Í¼Àı·ûºÅµÄ´úºÅ
-     * @param index µ±Ç°µØÍ¼Î»ÖÃ±àºÅ
-     * @param playerPos1 Íæ¼Ò1µÄµ±Ç°Î»ÖÃ
-     * @param playerPos2 Íæ¼Ò2µÄµ±Ç°Î»ÖÃ
-     * @return µØÍ¼µ±Ç°Î»ÖÃµÄ¶ÔÓ¦Í¼Æ¬
-     */
-    public String getGraph(int i, int index, int playerPos1, int playerPos2){
-    	String graph = "";
-    	
-  	    /***********´ı²¹³äµÄ´úÂëÇøÓò*************/
-    	//ÉèÖÃ¸ø¶¨µÄµØÍ¼Î»ÖÃindexµÄÕıÈ·µÄÍ¼ĞÎ·ûºÅgraph,graphµÄ¿ÉÄÜÖµ°üÀ¨£º
-    	//AB£¨2¸öÍæ¼ÒÇ¡ºÃÍ¬ÔÚÎ»ÖÃindex£©
-    	//£Á£¨Íæ¼Ò1Ç¡ºÃÔÚÎ»ÖÃindex£©
-    	//£Â£¨Íæ¼Ò2Ç¡ºÃÔÚÎ»ÖÃindex£©
-    	//¡è¡¢¡ï¡¢¡ö¡¢¡ş¡¢£­£¨2¸öÍæ¼Ò¾ù²»ÔÚÎ»ÖÃindex£¬Ôò°´¹Ø¿¨´úºÅiÏàÓ¦ÉèÖÃÍ¼ĞÎ·ûºÅ£©   
-    	//¡ğ µØÍ¼µÄÆğµã
-    	//¨ˆ µØÍ¼µÄÖÕµã
-    	//£µ µØÍ¼Î»ÖÃ5Ê±ÏÔÊ¾È«½ÇµÄ£µ,ÔÚÆäËüÎ»ÖÃ£¨10,15...£©Ê±ÏÔÊ¾°ë½ÇÊı×Ö×Ö·û
-    	/***********´ı²¹³äµÄ´úÂëÇøÓò*************/
-    	
-        
-    	return graph;
-    }
-    
-    /**
-     * Êä³öµØÍ¼µÄÆæÊıĞĞ£¨µÚ1¡¢3ĞĞ£©
-     * @param start Êä³öµÄÆğÊ¼µãÔÚµØÍ¼ÉÏµÄÎ»ÖÃ
-     * @param end  Êä³öµÄ½áÊøµãÔÚµØÍ¼ÉÏµÄÎ»ÖÃ
-     * @param playerPos1 Íæ¼Ò1µÄµ±Ç°Î»ÖÃ
-     * @param playerPos2 Íæ¼Ò2µÄµ±Ç°Î»ÖÃ
-     */
-    public void showLine1(int start, int end, int playerPos1, int playerPos2){     
-    	for(int i = start; i < end; i++){
-    		System.out.print(getGraph(map[i], i, playerPos1, playerPos2));
-    	}
-    }
-    
-    /**
-     * Êä³öµØÍ¼µÄÅ¼ÊıĞĞ£¨µÚ2ĞĞ£©
-     * @param start Êä³öµÄÆğÊ¼µãÔÚµØÍ¼ÉÏµÄÎ»ÖÃ
-     * @param end  Êä³öµÄ½áÊøµãÔÚµØÍ¼ÉÏµÄÎ»ÖÃ
-     * @param playerPos1 Íæ¼Ò1µÄµ±Ç°Î»ÖÃ
-     * @param playerPos2 Íæ¼Ò2µÄµ±Ç°Î»ÖÃ
-     */
-    public void showLine2(int start, int end, int playerPos1, int playerPos2){    
-    	/***********´ı²¹³äµÄ´úÂëÇøÓò*************/
-    	;
-    	/***********´ı²¹³äµÄ´úÂëÇøÓò*************/
-    }
-    
-    /**
-     * Êä³öµØÍ¼µÄÓÒÊúÁĞ
-     * @param start Êä³öµÄÆğÊ¼µãÔÚµØÍ¼ÉÏµÄÎ»ÖÃ
-     * @param end  Êä³öµÄ½áÊøµãÔÚµØÍ¼ÉÏµÄÎ»ÖÃ
-     * @param playerPos1 Íæ¼Ò1µÄµ±Ç°Î»ÖÃ
-     * @param playerPos2 Íæ¼Ò2µÄµ±Ç°Î»ÖÃ
-     */
-    public void showRLine(int start, int end, int playerPos1, int playerPos2){
-    	/***********´ı²¹³äµÄ´úÂëÇøÓò*************/
-    	;
-    	/***********´ı²¹³äµÄ´úÂëÇøÓò*************/
-    }
-    
-    /**
-     * Êä³öµØÍ¼µÄ×óÊúÁĞ
-     * @param start Êä³öµÄÆğÊ¼µãÔÚµØÍ¼ÉÏµÄÎ»ÖÃ
-     * @param end  Êä³öµÄ½áÊøµãÔÚµØÍ¼ÉÏµÄÎ»ÖÃ
-     * @param playerPos1 Íæ¼Ò1µÄµ±Ç°Î»ÖÃ
-     * @param playerPos2 Íæ¼Ò2µÄµ±Ç°Î»ÖÃ
-     */
-    public void showLLine(int start, int end, int playerPos1, int playerPos2){
-    	for(int i = start; i < end; i++){
-    		System.out.println(getGraph(map[i], i,playerPos1, playerPos2));
-    	}
-    }
+	/**
+	 * ç”Ÿæˆåœ°å›¾:
+	 * å…³å¡ä»£å·ä¸ºï¼š1ï¼šå¹¸è¿è½®ç›˜ 2ï¼šåœ°é›· 3: æš‚åœ 4ï¼šæ—¶ç©º ï¼šæ™®é€š
+	 */
+	public void createMap() {
+		int i = 0;
 
-    /**
-     * ÏÔÊ¾¶ÔÕ½µØÍ¼
-     * @param playerPos1 Íæ¼Ò1µÄµ±Ç°Î»ÖÃ
-     * @param playerPos2 Íæ¼Ò2µÄµ±Ç°Î»ÖÃ
-     */
-    public void showMap(int playerPos1, int playerPos2){
-    	showLine1(0, 31, playerPos1, playerPos2);   //ÏÔÊ¾µØÍ¼µÚÒ»ĞĞ
-    	System.out.println();                       //»»ĞĞ
-    	/***********´ı²¹³äµÄ´úÂëÇøÓò*************/     //ÏÔÊ¾µØÍ¼ÓÒÊúĞĞ
-    	/***********´ı²¹³äµÄ´úÂëÇøÓò*************/     //ÏÔÊ¾µØÍ¼µÚ¶şĞĞ
-    	System.out.println();                        //»»ĞĞ
-    	/***********´ı²¹³äµÄ´úÂëÇøÓò*************/     //ÏÔÊ¾µØÍ¼×óÊúĞĞ
-    	/***********´ı²¹³äµÄ´úÂëÇøÓò*************/     //ÏÔÊ¾µØÍ¼µÚ3ĞĞ
-    }  
+		// åœ¨å¯¹æˆ˜åœ°å›¾ä¸Šè®¾ç½®å¹¸è¿è½®ç›˜
+		for (i = 0; i < luckyTurn.length; i++) {
+			map[luckyTurn[i]] = 1;
+		}
+
+		// åœ¨å¯¹æˆ˜åœ°å›¾ä¸Šè®¾ç½®åœ°é›·
+		for (i = 0; i < landMine.length; i++) {
+			map[landMine[i]] = 2;
+		}
+
+		// åœ¨å¯¹æˆ˜åœ°å›¾ä¸Šè®¾ç½®æš‚åœ
+		for (i = 0; i < pause.length; i++) {
+			map[pause[i]] = 3;
+		}
+
+		// åœ¨å¯¹æˆ˜åœ°å›¾ä¸Šè®¾ç½®æ—¶ç©ºéš§é“
+		for (i = 0; i < timeTunnel.length; i++) {
+			map[timeTunnel[i]] = 4;
+		}
+	}
+
+	/**
+	 * æ˜¾ç¤ºåœ°å›¾å…³å¡å¯¹åº”çš„å›¾å½¢
+	 * 
+	 * @param i          åœ°å›¾å½“å‰ä½ç½®çš„å…³å¡ä»£å·,å³å›¾ä¾‹ç¬¦å·çš„ä»£å·
+	 * @param index      å½“å‰åœ°å›¾ä½ç½®ç¼–å·
+	 * @param playerPos1 ç©å®¶1çš„å½“å‰ä½ç½®
+	 * @param playerPos2 ç©å®¶2çš„å½“å‰ä½ç½®
+	 * @return åœ°å›¾å½“å‰ä½ç½®çš„å¯¹åº”å›¾ç‰‡
+	 */
+	public String getGraph(int i, int index, int playerPos1, int playerPos2) {
+		String graph = "";
+
+		/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ****** *******/
+		// è®¾ç½®ç»™å®šçš„åœ°å›¾ä½ç½®indexçš„æ­£ç¡®çš„å›¾å½¢ç¬¦å·graph,graphçš„å¯èƒ½å€¼åŒ…æ‹¬ï¼š
+		// ABï¼ˆ2ä¸ªç©å®¶æ°å¥½åŒåœ¨ä½ç½®indexï¼‰
+		// ï¼¡ï¼ˆç©å®¶1æ°å¥½åœ¨ä½ç½®indexï¼‰
+		// ï¼¢ï¼ˆç©å®¶2æ°å¥½åœ¨ä½ç½®indexï¼‰
+		// Â¤ã€â˜…ã€â– ã€ã€“ã€ï¼ï¼ˆ2ä¸ªç©å®¶å‡ä¸åœ¨ä½ç½®indexï¼Œåˆ™æŒ‰å…³å¡ä»£å·iç›¸åº”è®¾ç½®å›¾å½¢ç¬¦å·ï¼‰
+		// â—‹ åœ°å›¾çš„èµ·ç‚¹
+		// â–“ åœ°å›¾çš„ç»ˆç‚¹
+		// ï¼• åœ°å›¾ä½ç½®5æ—¶æ˜¾ç¤ºå…¨è§’çš„ï¼•,åœ¨å…¶å®ƒä½ç½®ï¼ˆ10,15...ï¼‰æ—¶æ˜¾ç¤ºåŠè§’æ•°å­—å­—ç¬¦
+		if (index == playerPos1 || index == playerPos2) {
+			if (index == playerPos1) {
+				graph += 'A';
+			}
+			if (index == playerPos2) {
+				graph += 'B';
+			}
+		} else if (index == 0) {
+			graph += "â—‹";
+
+		} else if (index == 99) {
+			graph += "â–“";
+
+		} else if (index % 5 == 0) {
+			graph += (index < 10) ? "ï¼•" + ' ' : String.valueOf(index) + ' ';
+			return graph;
+		} else {
+			switch (i) {
+				case 0:
+					graph += '-';
+					break;
+				case 2:
+					graph += "â˜…";
+					break;
+				case 1:
+					graph += "Â¤";
+					break;
+				case 3:
+					graph += "â– ";
+					break;
+				case 4:
+					graph += "ã€“";
+					break;
+				default:
+					graph += '-';
+					break;
+			}
+		}
+		while (graph.length() < 3) {
+			graph += ' ';
+		}
+
+		/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ****** *******/
+		return graph;
+	}
+
+	/***
+	 * è¾“å‡ºåœ°å›¾çš„å¥‡æ•°è¡Œï¼ˆç¬¬1ã€3è¡Œï¼‰
+	 * 
+	 * @param start      è¾“å‡ºçš„èµ·å§‹ç‚¹åœ¨åœ°å›¾ä¸Šçš„ä½ç½®
+	 * @param end        è¾“å‡ºçš„ç»“æŸç‚¹åœ¨åœ°å›¾ä¸Šçš„ä½ç½®
+	 * @param playerPos1 ç©å®¶1çš„å½“å‰ä½ç½®
+	 * @param playerPos2 ç©å®¶2çš„å½“å‰ä½ç½®
+	 */
+	public void showLine1(int start, int end, int playerPos1, int playerPos2) {
+		for (int i = start; i < end; i++) {
+			System.out.print(getGraph(map[i], i, playerPos1, playerPos2));
+		}
+	}
+
+	/**
+	 * è¾“å‡ºåœ°å›¾çš„å¶æ•°è¡Œï¼ˆç¬¬2è¡Œï¼‰
+	 * 
+	 * @param start      è¾“å‡ºçš„èµ·å§‹ç‚¹åœ¨åœ°å›¾ä¸Šçš„ä½ç½®
+	 * @param end        è¾“å‡ºçš„ç»“æŸç‚¹åœ¨åœ°å›¾ä¸Šçš„ä½ç½®
+	 * @param playerPos1 ç©å®¶1çš„å½“å‰ä½ç½®
+	 * @param playerPos2 ç©å®¶2çš„å½“å‰ä½ç½®
+	 */
+	public void showLine2(int start, int end, int playerPos1, int playerPos2) {
+		/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ****** *******/
+		for (int i = end - 1; i >= start; i--) {
+			System.out.print(getGraph(map[i], i, playerPos1, playerPos2));
+		}
+		/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ****** *******/
+	}
+
+	/**
+	 * è¾“å‡ºåœ°å›¾çš„å³ç«–åˆ—
+	 * 
+	 * @param start      è¾“å‡ºçš„èµ·å§‹ç‚¹åœ¨åœ°å›¾ä¸Šçš„ä½ç½®
+	 * @param end        è¾“å‡ºçš„ç»“æŸç‚¹åœ¨åœ°å›¾ä¸Šçš„ä½ç½®
+	 * @param playerPos1 ç©å®¶1çš„å½“å‰ä½ç½®
+	 * @param playerPos2 ç©å®¶2çš„å½“å‰ä½ç½®
+	 */
+	public void showRLine(int start, int end, int playerPos1, int playerPos2) {
+		/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ****** *******/
+		for (int i = start; i < end; i++) {
+			System.out.println(" ".repeat(92) + getGraph(map[i], i, playerPos1, playerPos2));
+		}
+		/*********** å¾…è¡¥å……çš„ä»£ç åŒºåŸŸ****** *******/
+	}
+
+	/**
+	 * è¾“å‡ºåœ°å›¾çš„å·¦ç«–åˆ—
+	 * 
+	 * @param start      è¾“å‡ºçš„èµ·å§‹ç‚¹åœ¨åœ°å›¾ä¸Šçš„ä½ç½®
+	 * @param end        è¾“å‡ºçš„ç»“æŸç‚¹åœ¨åœ°å›¾ä¸Šçš„ä½ç½®
+	 * @param playerPos1 ç©å®¶1çš„å½“å‰ä½ç½®
+	 * @param playerPos2 ç©å®¶2çš„å½“å‰ä½ç½®
+	 */
+	public void showLLine(int start, int end, int playerPos1, int playerPos2) {
+		for (int i = start; i < end; i++) {
+			System.out.println(getGraph(map[i], i, playerPos1, playerPos2));
+		}
+	}
+
+	/**
+	 * æ˜¾ç¤ºå¯¹æˆ˜åœ°å›¾
+	 * 
+	 * @param playerPos1 ç©å®¶1çš„å½“å‰ä½ç½®
+	 * @param playerPos2 ç©å®¶2çš„å½“å‰ä½ç½®
+	 */
+	public void showMap(int playerPos1, int playerPos2) {
+		showLine1(0, 31, playerPos1, playerPos2); // æ˜¾ç¤ºåœ°å›¾ç¬¬ä¸€è¡Œ
+		System.out.println(); // æ¢è¡Œ
+		showRLine(31, 35, playerPos1, playerPos2); ///å³ç«–è¡Œ
+		showLine2(35,66,playerPos1,playerPos2);///ç¬¬äºŒè¡Œ
+		System.out.println(); // æ¢è¡Œ
+		showLLine(66, 69, playerPos1, playerPos2); ///å·¦ç«–è¡Œ
+		showLine1(69, 100, playerPos1, playerPos2); ///ç¬¬3è¡Œ
+	}
 }
