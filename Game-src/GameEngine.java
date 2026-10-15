@@ -19,8 +19,23 @@ public class GameEngine {
 		goAndStop[1] = "on"; // 设置玩家2下一次走或停
 	}
 
-	private int getInputOfChosingPlayer(Scanner input) {
-		String temp = input.next().trim();
+	private int getInputOfChosingPlayer(Scanner input, int a) {
+		if(a >= 30){
+			System.out.println("错误次数过多，将自动为你选择");
+			String[] names = {"关羽","张飞","吕布","赵云"};
+			for(int b =0;b<4;b++){
+				boolean isExist = false;
+				for(int i = 0;i<2;i++){
+					if(playerName[i].equals(names[b])){
+						isExist = true;
+					}
+					if(isExist == false){
+						return b + 1;
+					}
+				}
+			}
+		}
+		String temp = input.nextLine().trim();
 		if (temp.equals("1. 关羽") || temp.equals("关羽") || temp.equals("1.关羽")) {
 			temp = "1";
 		} else if (temp.equals("2. 张飞") || temp.equals("张飞") || temp.equals("2.张飞")) {
@@ -34,7 +49,7 @@ public class GameEngine {
 		if (temp.length() > 1 || (ans != 1 && ans != 2 && ans != 3 && ans != 4)) {
 			System.out.println();
 			System.out.print("输入不合法，请重新输入：");
-			ans = getInputOfChosingPlayer(input);
+			ans = getInputOfChosingPlayer(input,a+1);
 		}
 		return ans;
 	}
@@ -60,13 +75,13 @@ public class GameEngine {
 		/*********** 待补充的代码区域 *************/
 		// 通过键盘输入接收用户选择的角色，注意，不允许角色重复
 		System.out.print("请玩家1选择角色:  ");
-		int role1 = getInputOfChosingPlayer(input);
+		int role1 = getInputOfChosingPlayer(input,0);
 		System.out.print("请玩家2选择角色:  ");
-		int role2 = getInputOfChosingPlayer(input);
+		int role2 = getInputOfChosingPlayer(input,0);
 		while (role2 == role1) {
 			System.out.println();
 			System.out.print("角色" + role1 + "已被选择，请重新选择：");
-			role2 = getInputOfChosingPlayer(input);
+			role2 = getInputOfChosingPlayer(input,0);
 		}
 		/*********** 待补充的代码区域 *************/
 
@@ -154,7 +169,7 @@ public class GameEngine {
 
 			// System.out.println("\n");
 
-			if (goAndStop[1].equals("on")) {
+			if (goAndStop[1].equals("on") && playerPos1 < 99 && playerPos2 < 99) {
 				// 玩家2掷骰子
 				step = throwShifter(2, input); // 掷骰子
 				System.out.println("-----------------"); // 显示结果信息
@@ -206,7 +221,7 @@ public class GameEngine {
 			seed += answer.charAt(i);
 		}
 		Random r2 = new Random(r.nextLong() * seed);
-		step = Math.abs(r2.nextInt()) % 6;
+		step = r2.nextInt(6);
 
 		return step + 1;
 		/*********** 待补充的代码区域 *************/
@@ -256,7 +271,7 @@ public class GameEngine {
 					}else{
 						tempPos = playerPos1;
 						playerPos1 = position;
-						position = playerPos1;
+						position = tempPos;
 					}
 				} else if (choice == 2) {
 					if (no == 1) {
@@ -317,7 +332,7 @@ public class GameEngine {
 				"兄弟，地雷是让着你踩的吗？"
 		};
 		Random r = new Random(System.currentTimeMillis());
-		System.out.println(sentences[Math.abs(r.nextInt()) % numsOfSetence]);
+		System.out.println(sentences[r.nextInt(numsOfSetence)]);
 	}
 
 	private int getTheChoice(Scanner input) {

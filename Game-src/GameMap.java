@@ -85,10 +85,10 @@ public class GameMap {
 					graph += "■";
 					break;
 				case 4:
-					graph += "〓";
-					break;
+					graph += "〓 ";
+					return graph;
 				default:
-					graph += '-';
+					graph += '－';
 					break;
 			}
 		}
@@ -141,7 +141,7 @@ public class GameMap {
 	public void showRLine(int start, int end, int playerPos1, int playerPos2) {
 		/*********** 待补充的代码区域****** *******/
 		for (int i = start; i < end; i++) {
-			System.out.println(" ".repeat(92) + getGraph(map[i], i, playerPos1, playerPos2));
+			System.out.println(" ".repeat(90) + getGraph(map[i], i, playerPos1, playerPos2));
 		}
 		/*********** 待补充的代码区域****** *******/
 	}
