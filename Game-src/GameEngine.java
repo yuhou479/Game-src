@@ -105,25 +105,6 @@ public class GameEngine {
 		System.out.println("\n");
 	}
 
-	/**
-	 * 掷骰子
-	 * 
-	 * @param no
-	 *           玩家次序
-	 * @return step 掷出的骰子数目
-	 */
-
-	/**
-	 * 计算玩家此次移动后的当前位置
-	 * 
-	 * @param no
-	 *                 玩家次序
-	 * @param position
-	 *                 移动前位置
-	 * @param step
-	 *                 掷的骰子数目
-	 * @return position 移动后的位置
-	 */
 	public void handleMapEvent(Player player, Scanner input) {
 		Player enemy = player == player1 ? player2 : player1;
 		switch (map.map[player.curPos]) { // 根据地图中的关卡代号进行判断
