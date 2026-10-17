@@ -4,26 +4,27 @@ import java.util.Scanner;
 public class Player {
     private static String[] names = { "关羽", "张飞", "吕布", "赵云" };
     private String name;
-    private int curPos = 0; // 角色当前位置
     private boolean canMove = true;
+    public int curPos = 0; // 角色当前位置
 
     /**
      * 选择角色
      * 
      * @a 迭代次数
      **/
-    public void choseCharactor(Scanner input, int a) {
+    public int choseCharactor(Scanner input, int a, Player enemy) {
         if (a >= 30) {
             System.out.println("错误次数过多，将自动为你选择");
-            String[] names = { "关羽", "张飞", "吕布", "赵云" };
-            for (int b = 0; b < 4; b++) {
-                boolean isExist = false;
-                for (int i = 0; i < 2; i++) {
-                    if (names[i].equals(names[b])) {
-                        isExist = true;
-                    }
-                    if (isExist == false) {
-                        name = names[b];
+            if (enemy == null) {
+                Random r = new Random(System.currentTimeMillis());
+                int choice = r.nextInt(4);
+                name = names[choice];
+                return choice;
+            } else {
+                for (int i = 0; i < 4; i++) {
+                    if (enemy.getName().equals(names[i]) == false) {
+                        name = names[i];
+                        return i;
                     }
                 }
             }
@@ -42,9 +43,10 @@ public class Player {
         if (temp.length() > 1 || (ans != 1 && ans != 2 && ans != 3 && ans != 4)) {
             System.out.println();
             System.out.print("输入不合法，请重新输入：");
-            choseCharactor(input, a + 1);
+            return choseCharactor(input, a + 1, enemy);
         }
         name = names[ans - 1];
+        return ans - 1;
     }
 
     public String getName() {
@@ -61,6 +63,7 @@ public class Player {
         if (canMove == false) {
             System.out.println("\n" + name + "停掷一次！\n"); // 显示此次暂停信息
             canMove = true;
+            return -1;
         }
         int step = 0;
         System.out.print(name + ", 请您按任意字母键后回车启动掷骰子： ");
@@ -73,33 +76,37 @@ public class Player {
         }
         Random r2 = new Random(r.nextLong() * seed);
         step = r2.nextInt(6);
-
+        moveStep(step + 1);
         return step + 1;
+    }
+
+    // 前进step步
+    private void moveStep(int step) {
+        curPos = curPos + step > 99 ? 99 : curPos + step;
+        if (curPos == 99) {
+            GameEngine.win(this);
+        }
     }
 
     public void moveToStart() {
         curPos = 0;
     }
 
-    public void replyToShiKongSuiDao() {
+    public void handleToShiKongSuiDao() {
         System.out.println(name + "：遁入虚空！");
-        curPos = curPos + 10 > 99 ? 99 : curPos + 10;
+        moveStep(10);
     }
 
-    public void setPos(int pos) {
-        curPos = pos;
-    }
-
-    public void replyToStop() {
+    public void handleToStop() {
         canMove = false;
     }
 
-    public void replyToBomb() {
+    public void handleToBomb() {
         curPos = curPos - 6 < 0 ? 0 : curPos - 6;
         System.out.println(name + "：你给我等着！！！");
     }
 
-    private int getTheChoiceOfLuckyWheel(Scanner input) {
+    public int getTheChoiceOfLuckyWheel(Scanner input) {
         String temp = input.next();
         if (temp.equals("策略1") || temp.equals("交换位置") || temp.equals("策略1：交换位置")) {
             temp = "1";
