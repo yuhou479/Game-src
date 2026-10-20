@@ -1,36 +1,36 @@
+import java.util.*;
+
 public class GameMap {
-	int[] map = new int[100]; // 对战地图,注意，以下数组中的index从0开始，故第1个地雷实际出现在地图上的第5个位置
-	int[] luckyTurn = { 6, 23, 39, 54, 69, 83 }; // 幸运轮盘
-	int[] landMine = { 4, 13, 17, 33, 38, 49, 64, 79, 94 }; // 地雷位置，第1个地雷实际出现在地图上的第5个位置
-	int[] pause = { 9, 27, 59, 93 }; // 暂停
-	int[] timeTunnel = { 19, 24, 44, 63, 72, 87, 89 }; // 时空隧道
+	int[] map = new int[100]; // 对战地图，元素值 0~4 表示该位置的关卡代号
 
 	/**
-	 * 生成地图:
-	 * 关卡代号为：1：幸运轮盘 2：地雷 3: 暂停 4：时空 ：普通
+	 * 生成地图：随机生成逻辑已抽取到 MapGenerator 中，这里只负责调用
+	 * 关卡代号为：1：幸运轮盘 2：地雷 3：暂停 4：时空隧道 0：普通
 	 */
-	public void createMap() {
-		int i = 0;
+	public void createMap(Scanner input) {
+		String ans;
+		int LuckyCount = 6, MineCount = 9, PauseCount = 4, TunnelCount = 7;
+		System.out.println("当前特殊位置数量：幸运轮盘 " + LuckyCount + "个，地雷 " + MineCount
+				+ "个，暂停 " + PauseCount + "个，时空隧道 " + TunnelCount + "个"
+				+ "\n(上限均为10，超过上限的输入将设为10)\n请选择是否改变特殊位置数量【Y/N】");
+		ans = input.nextLine().trim().toUpperCase();
+		if (ans.equals("Y")) {
 
-		// 在对战地图上设置幸运轮盘
-		for (i = 0; i < luckyTurn.length; i++) {
-			map[luckyTurn[i]] = 1;
+			System.out.print("\n请输入幸运轮盘数量：");
+			LuckyCount = input.nextInt();
+			LuckyCount = LuckyCount > 10 ? 10 : LuckyCount;
+			System.out.print("\n请输入地雷数量：");
+			MineCount = input.nextInt();
+			MineCount = MineCount > 10 ? 10 : MineCount;
+			System.out.print("\n请输入暂停数量：");
+			PauseCount = input.nextInt();
+			PauseCount = PauseCount > 10 ? 10 : PauseCount;
+			System.out.print("\n请输入时空隧道数量：");
+			TunnelCount = input.nextInt();
+			TunnelCount = TunnelCount > 10 ? 10 : TunnelCount;
+			input.nextLine(); // 吃掉 nextInt 留下的换行符，防止污染后续的 nextLine
 		}
-
-		// 在对战地图上设置地雷
-		for (i = 0; i < landMine.length; i++) {
-			map[landMine[i]] = 2;
-		}
-
-		// 在对战地图上设置暂停
-		for (i = 0; i < pause.length; i++) {
-			map[pause[i]] = 3;
-		}
-
-		// 在对战地图上设置时空隧道
-		for (i = 0; i < timeTunnel.length; i++) {
-			map[timeTunnel[i]] = 4;
-		}
+		map = new MapGenerator(LuckyCount, MineCount, PauseCount, TunnelCount).generate();
 	}
 
 	/**
@@ -170,7 +170,7 @@ public class GameMap {
 		showLine1(0, 31, playerPos1, playerPos2); // 显示地图第一行
 		System.out.println(); // 换行
 		showRLine(31, 35, playerPos1, playerPos2); ///右竖行
-		showLine2(35,66,playerPos1,playerPos2);///第二行
+		showLine2(35, 66, playerPos1, playerPos2);///第二行
 		System.out.println(); // 换行
 		showLLine(66, 69, playerPos1, playerPos2); ///左竖行
 		showLine1(69, 100, playerPos1, playerPos2); ///第3行

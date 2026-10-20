@@ -83,9 +83,6 @@ public class Player {
     // 前进step步
     private void moveStep(int step) {
         curPos = curPos + step > 99 ? 99 : curPos + step;
-        if (curPos == 99) {
-            GameEngine.win(this);
-        }
     }
 
     public void moveToStart() {

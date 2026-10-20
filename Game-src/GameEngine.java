@@ -4,16 +4,17 @@ public class GameEngine {
 	private GameMap map; // 地图
 	private Player player1;
 	private Player player2;
-	private static boolean gameOver = false;
+	private Referee referee; // 裁判，负责规则判定
 
 	/**
 	 * 初始化游戏的一局
 	 */
-	public void init() {
+	public void init(Scanner input) {
 		map = new GameMap();
-		map.createMap(); // 生成地图
+		map.createMap(input); // 生成地图
 		player1 = new Player(); // 设置玩家1起始位置
 		player2 = new Player(); // 设置玩家2起始位置
+		referee = new Referee(map, player1, player2); // 规则交给裁判
 	}
 
 	/**
@@ -21,7 +22,8 @@ public class GameEngine {
 	 */
 	public void start() {
 		// 初始化
-		init();
+		Scanner input = new Scanner(System.in, "GBK");
+		init(input);
 		System.out.println("**************************************************************");
 		System.out.println("*                                                            *");
 		System.out.println("*                                                            *");
@@ -29,10 +31,9 @@ public class GameEngine {
 		System.out.println("*                                                            *");
 		System.out.println("*                                                            *");
 		System.out.println("**************************************************************\n");
-
+		//map.choseMap(input);
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~两  人  对  战~~~~~~~~~~~~~~~~~~~~~~~~\n");
 		System.out.println("请选择角色: 1. 关羽  2. 张飞  3. 吕布  4. 赵云");
-		Scanner input = new Scanner(System.in, "GBK");
 
 		// 通过键盘输入接收用户选择的角色，注意，不允许角色重复
 		System.out.print("请玩家1选择角色:  ");
@@ -41,7 +42,7 @@ public class GameEngine {
 		int role2 = player2.choseCharactor(input, 0, player1);
 		while (role2 == role1) {
 			System.out.println();
-			System.out.print("角色" + role1 + "已被选择，请重新选择：");
+			System.out.print("角色" + (role1+1) + "已被选择，请重新选择：");
 			role2 = player2.choseCharactor(input, 0, player1);
 		}
 
@@ -70,11 +71,11 @@ public class GameEngine {
 
 		// 游戏开始
 		// 轮流掷骰子直到有人达到终点
-		while (gameOver == false) {
+		while (referee.isGameOver() == false) {
 			// 玩家1掷骰子
 			gameRound(player1, input);
 
-			if (gameOver == false) {
+			if (referee.isGameOver() == false) {
 				// 玩家2掷骰子
 				gameRound(player2, input);
 			}
@@ -86,6 +87,9 @@ public class GameEngine {
 		System.out.print("****************************************************\n\n");
 	}
 
+	/**
+	 * 单个玩家的一个回合：掷骰子 → 处理事件 → 判定胜负 → 显示
+	 */
 	private void gameRound(Player player, Scanner input) {
 		int step;
 		step = player.throwShifter(input);
@@ -94,81 +98,18 @@ public class GameEngine {
 		}
 		System.out.println("-----------------"); // 显示结果信息
 		System.out.println(player.getName() + "刚才得到的骰子数： " + step + "\n");
-		handleMapEvent(player, input); // 处理当前位置的事件
+		referee.handleMapEvent(player, input); // 处理当前位置的事件
 		System.out.println();
 		System.out.println(player1.getName() + "(A)当前位置：  " + player1.curPos);
 		System.out.println(player2.getName() + "(B)当前位置：  " + player2.curPos);
 		System.out.println("-----------------");
+		referee.judgeWin(player); // 判定胜负
+		if (referee.isGameOver() == true) {
+			return;
+		}
 		// 显示对战地图
 		System.out.println("图例说明：○ 起点; ▓ 终点; ■ 暂停; ¤ 幸运轮盘; ★ 地雷; 〓 时空隧道; － 普通; 数字 当前位置序号\n地图如下：");
 		map.showMap(player1.curPos, player2.curPos); // 显示当前地图
 		System.out.println("\n");
-	}
-
-	public void handleMapEvent(Player player, Scanner input) {
-		Player enemy = player == player1 ? player2 : player1;
-		switch (map.map[player.curPos]) { // 根据地图中的关卡代号进行判断
-			case 0: // 走到普通格
-				if (player1.curPos == player2.curPos) {
-					(enemy).moveToStart();
-					System.out.print(player.getName() + ":后来者总有机会.");
-				} else
-					System.out.println("什么事也没发生");
-				break;
-			case 1: // 幸运轮盘
-				System.out.println("请选择你的策略：");
-				System.out.println("策略1：交换位置");
-				System.out.println("策略2：轰炸（对方位置-6，如果对方当前位置小于6，回起点）");
-				int choice = player.getTheChoiceOfLuckyWheel(input);
-				if (choice == 1) {
-					swapPos(player, enemy);
-				} else if (choice == 2) {
-					enemy.handleToBomb();
-				}
-				break;
-			case 2: // 踩到地雷，回到起点同时从准备好的句子中随机抽一句输出
-				player.moveToStart();
-				printARandomSentence();
-				break;
-			case 3: // 下一次暂停一次
-				System.out.println(enemy.getName() + "：就搁着呆着吧！");
-				player.handleToStop();
-				break;
-			case 4: // 时空隧道
-				player.handleToShiKongSuiDao();
-				break;
-		}
-	}
-
-	private void printARandomSentence() {
-		int numsOfSetence = 10;
-		String[] sentences = {
-				"砰！踩雷了吧，走路不长眼睛？",
-				"地雷都被你踩中了，今天运气不错嘛～",
-				"哈哈，脚底生花，恭喜中奖！",
-				"这一脚下去，怕是踩出了个寂寞。",
-				"雷区漫步，你是真的勇士！",
-				"哎哟，这一炸，魂都飞了吧？",
-				"别人是走路，你是排雷，致敬英雄！",
-				"踩雷高手，非你莫属！",
-				"这一脚，踩出了新年鞭炮的感觉。",
-				"兄弟，地雷是让着你踩的吗？"
-		};
-		Random r = new Random(System.currentTimeMillis());
-		System.out.println(sentences[r.nextInt(numsOfSetence)]);
-	}
-
-	private void swapPos(Player player01, Player player02) {
-		int tempPos = player01.curPos;
-		player01.curPos = player02.curPos;
-		player02.curPos = tempPos;
-	}
-
-	/**
-	 * 显示胜利
-	 */
-	public static void win(Player player) {
-		System.out.println("\n恭喜" + player.getName() + "将军! 您获胜了！");
-		gameOver = true;
 	}
 }
