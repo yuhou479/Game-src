@@ -15,22 +15,32 @@ public class GameMap {
 				+ "\n(上限均为10，超过上限的输入将设为10)\n请选择是否改变特殊位置数量【Y/N】");
 		ans = input.nextLine().trim().toUpperCase();
 		if (ans.equals("Y")) {
-
-			System.out.print("\n请输入幸运轮盘数量：");
-			LuckyCount = input.nextInt();
-			LuckyCount = LuckyCount > 10 ? 10 : LuckyCount;
-			System.out.print("\n请输入地雷数量：");
-			MineCount = input.nextInt();
-			MineCount = MineCount > 10 ? 10 : MineCount;
-			System.out.print("\n请输入暂停数量：");
-			PauseCount = input.nextInt();
-			PauseCount = PauseCount > 10 ? 10 : PauseCount;
-			System.out.print("\n请输入时空隧道数量：");
-			TunnelCount = input.nextInt();
-			TunnelCount = TunnelCount > 10 ? 10 : TunnelCount;
-			input.nextLine(); // 吃掉 nextInt 留下的换行符，防止污染后续的 nextLine
+			LuckyCount = readSpecialCount(input, "幸运轮盘");
+			MineCount = readSpecialCount(input, "地雷");
+			PauseCount = readSpecialCount(input, "暂停");
+			TunnelCount = readSpecialCount(input, "时空隧道");
 		}
 		map = new MapGenerator(LuckyCount, MineCount, PauseCount, TunnelCount).generate();
+	}
+
+	/**
+	 * 读取一种特殊格子的数量：非数字或负数按 0 处理，超过 10 按 10 处理。
+	 */
+	private int readSpecialCount(Scanner input, String name) {
+		System.out.print("\n请输入" + name + "数量：");
+		String line = input.nextLine().trim();
+		int count;
+		try {
+			count = Integer.parseInt(line);
+		} catch (NumberFormatException e) {
+			count = 0;
+		}
+		if (count < 0) {
+			count = 0;
+		} else if (count > 10) {
+			count = 10;
+		}
+		return count;
 	}
 
 	/**
@@ -67,19 +77,13 @@ public class GameMap {
 		} else if (index == 99) {
 			graph += "▓";
 
-		} else if (index % 5 == 0) {
-			graph += (index < 10) ? "５" + ' ' : String.valueOf(index) + ' ';
-			return graph;
 		} else {
 			switch (i) {
-				case 0:
-					graph += '-';
+				case 1:
+					graph += "¤";
 					break;
 				case 2:
 					graph += "★";
-					break;
-				case 1:
-					graph += "¤";
 					break;
 				case 3:
 					graph += "■";
@@ -87,6 +91,13 @@ public class GameMap {
 				case 4:
 					graph += "〓 ";
 					return graph;
+				case 0:
+					if (index % 5 == 0) {
+						graph += (index < 10) ? "５" + ' ' : String.valueOf(index) + ' ';
+						return graph;
+					}
+					graph += '-';
+					break;
 				default:
 					graph += '－';
 					break;

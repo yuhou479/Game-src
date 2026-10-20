@@ -30,6 +30,11 @@ public class Player {
             }
         }
         String temp = input.nextLine().trim();
+        if (temp.isEmpty()) {
+            System.out.println();
+            System.out.print("输入不合法，请重新输入：");
+            return choseCharactor(input, a + 1, enemy);
+        }
         if (temp.equals("1. 关羽") || temp.equals("关羽") || temp.equals("1.关羽")) {
             temp = "1";
         } else if (temp.equals("2. 张飞") || temp.equals("张飞") || temp.equals("2.张飞")) {
